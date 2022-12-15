@@ -22,10 +22,13 @@ fn fetch() void {
         to: []const u8,
     };
 
-    var files = [_]etl{.{
+    var files = [_]etl{ .{
         .from = "https://gist.githubusercontent.com/psyomn/e991f6925771670e697d6e0166745377/raw/92795cc0dedb18d6fba8ba4cb1f71ea5b9873a1f/aoc-2022-1.txt",
         .to = "src/aoc/2022/input/1.txt",
-    }};
+    }, .{
+        .from = "https://gist.githubusercontent.com/psyomn/e991f6925771670e697d6e0166745377/raw/6277e3a078bc1346045047dad3f5783a036557e5/aoc-2022-2.txt",
+        .to = "src/aoc/2022/input/2.txt",
+    } };
 
     for (files) |file| {
         std.debug.print("fetching: {s}...\n", .{file.from});
@@ -78,7 +81,7 @@ pub fn main() !void {
         switch (val) {
             1 => aoc_01.run(),
             2 => aoc_02.run(),
-            else => std.debug.print("no such problem id", .{}),
+            else => std.debug.print("no such problem id\n", .{}),
         }
     } else {
         usage();
