@@ -63,6 +63,8 @@ pub fn build(b: *std.build.Builder) void {
 
         aoc.addPackage(psyds);
         aoc.addPackage(misc);
+
+        aoc.linkSystemLibraryName("curl");
         aoc.linkLibC();
 
         aoc.install();

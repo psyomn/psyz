@@ -1,31 +1,67 @@
 const std = @import("std");
 const os = std.os;
-const allocator = std.testing.allocator;
-const print = std.io.getStdOut().writer().print;
 
 const ds = @import("psy-ds");
 const getopt = @import("psy-misc").CGetOpt;
+const curl = @import("psy-misc").CCurl;
 
 // problems
+const common = @import("common.zig");
 const aoc_01 = @import("1.zig");
+const aoc_02 = @import("2.zig");
 
 const Session = struct {
     problem: ?u8,
 };
 
+fn fetch() void {
+    const allocator = std.heap.c_allocator;
+
+    const etl = struct {
+        from: []const u8,
+        to: []const u8,
+    };
+
+    var files = [_]etl{.{
+        .from = "https://gist.githubusercontent.com/psyomn/e991f6925771670e697d6e0166745377/raw/92795cc0dedb18d6fba8ba4cb1f71ea5b9873a1f/aoc-2022-1.txt",
+        .to = "src/aoc/2022/input/1.txt",
+    }};
+
+    for (files) |file| {
+        std.debug.print("fetching: {s}...\n", .{file.from});
+
+        const ret = curl.get(file.from[0..]) catch |err| {
+            std.debug.print("error: {}", .{err});
+            continue;
+        };
+        defer allocator.free(ret);
+
+        common.writeBuf(file.to, ret) catch |err| {
+            std.debug.print("could not write file {s}: {}\n", .{ file.to, err });
+            continue;
+        };
+    }
+}
+
 fn usage() void {
-    std.debug.print("aoc-2022 -p <problem-number>\n", .{});
+    std.debug.print("aoc-2022 -p <problem-number> run aoc problem\n", .{});
+    std.debug.print("aoc-2022 -g will fetch the data\n", .{});
 }
 
 pub fn main() !void {
     var sess = Session{ .problem = null };
 
-    var ret = getopt.getopt(os.argv, "p:h");
-    while (ret != -1) : (ret = getopt.getopt(os.argv, "p:h")) {
+    var ret = getopt.getopt(os.argv, "p:hg");
+    while (ret != -1) : (ret = getopt.getopt(os.argv, "p:hg")) {
         switch (@intCast(u8, ret)) {
             'p' => {
                 const optarg = getopt.optargAsSlice();
                 sess.problem = try std.fmt.parseInt(u8, optarg, 10);
+            },
+            'g' => {
+                std.debug.print("getting data...\n", .{});
+                fetch();
+                return;
             },
             'h' => {
                 usage();
@@ -41,7 +77,8 @@ pub fn main() !void {
     if (sess.problem) |val| {
         switch (val) {
             1 => aoc_01.run(),
-            else => try print("no such problem id", .{}),
+            2 => aoc_02.run(),
+            else => std.debug.print("no such problem id", .{}),
         }
     } else {
         usage();
