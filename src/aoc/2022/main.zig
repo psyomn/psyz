@@ -9,6 +9,7 @@ const curl = @import("psy-misc").CCurl;
 const common = @import("common.zig");
 const aoc_01 = @import("1.zig");
 const aoc_02 = @import("2.zig");
+const aoc_03 = @import("3.zig");
 
 const Session = struct {
     problem: ?usize,
@@ -28,6 +29,9 @@ fn fetch() void {
     }, .{
         .from = "https://gist.githubusercontent.com/psyomn/e991f6925771670e697d6e0166745377/raw/6277e3a078bc1346045047dad3f5783a036557e5/aoc-2022-2.txt",
         .to = "src/aoc/2022/input/2.txt",
+    }, .{
+        .from = "https://gist.githubusercontent.com/psyomn/e991f6925771670e697d6e0166745377/raw/c26cd8ccafdbf4c7332512e2aaf27cbf68b6d717/aoc-2022-3.txt",
+        .to = "src/aoc/2022/input/3.txt",
     } };
 
     for (files) |file| {
@@ -80,6 +84,7 @@ pub fn main() !void {
     const fnarr = [_](fn () void){
         aoc_01.run,
         aoc_02.run,
+        aoc_03.run,
     };
 
     if (sess.problem) |val| {
