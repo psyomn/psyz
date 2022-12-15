@@ -11,7 +11,7 @@ const aoc_01 = @import("1.zig");
 const aoc_02 = @import("2.zig");
 
 const Session = struct {
-    problem: ?u8,
+    problem: ?usize,
 };
 
 fn fetch() void {
@@ -77,10 +77,14 @@ pub fn main() !void {
         }
     }
 
+    const fnarr = [_](fn () void){
+        aoc_01.run,
+        aoc_02.run,
+    };
+
     if (sess.problem) |val| {
         switch (val) {
-            1 => aoc_01.run(),
-            2 => aoc_02.run(),
+            0...fnarr.len => |idx| fnarr[idx](),
             else => std.debug.print("no such problem id\n", .{}),
         }
     } else {
