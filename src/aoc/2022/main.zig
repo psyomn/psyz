@@ -10,6 +10,8 @@ const common = @import("common.zig");
 const aoc_01 = @import("1.zig");
 const aoc_02 = @import("2.zig");
 const aoc_03 = @import("3.zig");
+const aoc_04 = @import("4.zig");
+const aoc_05 = @import("5.zig");
 
 const Session = struct {
     problem: ?usize,
@@ -32,6 +34,9 @@ fn fetch() void {
     }, .{
         .from = "https://gist.githubusercontent.com/psyomn/e991f6925771670e697d6e0166745377/raw/c26cd8ccafdbf4c7332512e2aaf27cbf68b6d717/aoc-2022-3.txt",
         .to = "src/aoc/2022/input/3.txt",
+    }, .{
+        .from = "https://gist.githubusercontent.com/psyomn/e991f6925771670e697d6e0166745377/raw/da40ce837c950150862cfe110bace6466c2cf50f/aoc-2022-4.txt",
+        .to = "src/aoc/2022/input/4.txt",
     } };
 
     for (files) |file| {
@@ -85,6 +90,8 @@ pub fn main() !void {
         aoc_01.run,
         aoc_02.run,
         aoc_03.run,
+        aoc_04.run,
+        aoc_05.run,
     };
 
     if (sess.problem) |val| {
