@@ -75,7 +75,6 @@ pub fn build(b: *std.build.Builder) void {
     _ = mkC("c_getopt_example", "src/misc/cstuff/_getopt_example.zig", b, &target, &mode);
 
     const c_curl = mkC("c_curl_example", "src/misc/cstuff/_curl_example.zig", b, &target, &mode);
-    c_curl.addIncludeDir("/usr/include/");
     c_curl.linkSystemLibraryName("curl");
 
     {
