@@ -37,6 +37,9 @@ fn fetch() void {
     }, .{
         .from = "https://gist.githubusercontent.com/psyomn/e991f6925771670e697d6e0166745377/raw/da40ce837c950150862cfe110bace6466c2cf50f/aoc-2022-4.txt",
         .to = "src/aoc/2022/input/4.txt",
+    }, .{
+        .from = "https://gist.githubusercontent.com/psyomn/e991f6925771670e697d6e0166745377/raw/4020e5f73a10b5fcb626d6ee4a6b763fde643523/aoc-2022-5.txt",
+        .to = "src/aoc/2022/input/5.txt",
     } };
 
     for (files) |file| {
