@@ -18,7 +18,7 @@ fn part1() void {
 
     const allocator = std.heap.page_allocator;
     var state = State{
-        .stacks = .{ds.Stack(u8).init(&allocator)} ** 9,
+        .stacks = .{ds.Stack(u8).init(allocator)} ** 9,
         .result = .{0} ** 9,
     };
     for (state.stacks) |*stack| {
@@ -94,7 +94,7 @@ fn part2() void {
 
     const allocator = std.heap.page_allocator;
     var state = State{
-        .stacks = .{ds.Stack(u8).init(&allocator)} ** 9,
+        .stacks = .{ds.Stack(u8).init(allocator)} ** 9,
         .result = .{0} ** 9,
     };
     for (state.stacks) |*stack| {
@@ -149,7 +149,7 @@ fn part2() void {
         _ = mit.next(); // to
         const to: usize = std.fmt.parseInt(usize, mit.next().?, 10) catch unreachable;
 
-        var st = ds.Stack(u8).init(&allocator);
+        var st = ds.Stack(u8).init(allocator);
         defer st.destroy();
 
         var count: usize = 0;

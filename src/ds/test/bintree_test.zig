@@ -9,12 +9,12 @@ pub fn cmpint(a: u32, b: u32) bool {
 }
 
 test "create bintree" {
-    var bt = bintree.BinTree(u32).init(&allocator, cmpint);
+    var bt = bintree.BinTree(u32).init(allocator, cmpint);
     try bt.destroy();
 }
 
 test "insert" {
-    var bt = bintree.BinTree(u32).init(&allocator, cmpint);
+    var bt = bintree.BinTree(u32).init(allocator, cmpint);
 
     try bt.insert(10);
 

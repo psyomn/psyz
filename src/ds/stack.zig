@@ -1,5 +1,4 @@
 const std = @import("std");
-const Allocator = std.mem.Allocator;
 
 pub fn Stack(comptime T: type) type {
     return struct {
@@ -9,9 +8,9 @@ pub fn Stack(comptime T: type) type {
         len: usize,
         cap: usize,
         dirty: bool,
-        allocator: *const Allocator,
+        allocator: std.mem.Allocator,
 
-        pub fn init(allocator: *const Allocator) Self {
+        pub fn init(allocator: std.mem.Allocator) Self {
             return .{
                 .len = 0,
                 .cap = 1 << 4,
@@ -52,10 +51,7 @@ pub fn Stack(comptime T: type) type {
         }
 
         pub fn destroy(self: *Self) void {
-            if (!self.dirty) {
-                return;
-            }
-
+            if (!self.dirty) return;
             self.allocator.free(self.data);
         }
 

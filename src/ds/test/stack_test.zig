@@ -4,18 +4,18 @@ const allocator = std.testing.allocator;
 const stack = @import("../stack.zig");
 
 test "init a stack" {
-    var st = stack.Stack(u8).init(&allocator);
+    var st = stack.Stack(u8).init(allocator);
     defer st.destroy();
 }
 
 test "push one" {
-    var st = stack.Stack(u8).init(&allocator);
+    var st = stack.Stack(u8).init(allocator);
     defer st.destroy();
     try st.push(1);
 }
 
 test "push a few items in stack" {
-    var st = stack.Stack(u8).init(&allocator);
+    var st = stack.Stack(u8).init(allocator);
     defer st.destroy();
 
     var i: u8 = 0;
@@ -28,7 +28,7 @@ test "push a few items in stack" {
 }
 
 test "pop a few items" {
-    var st = stack.Stack(u8).init(&allocator);
+    var st = stack.Stack(u8).init(allocator);
     defer st.destroy();
 
     var i: u8 = 0;
@@ -59,7 +59,7 @@ test "insert stack structs" {
         .{ .name = "dan", .age = 14 },
     };
 
-    var st = stack.Stack(Person).init(&allocator);
+    var st = stack.Stack(Person).init(allocator);
     defer st.destroy();
 
     for (ps) |p| {
@@ -83,7 +83,7 @@ test "insert malloc'd structs" {
     p2.name = "amy";
     p2.age = 13;
 
-    var st = stack.Stack(*Person).init(&allocator);
+    var st = stack.Stack(*Person).init(allocator);
     defer st.destroy();
 
     try st.push(p1);
@@ -94,7 +94,7 @@ test "push 10 pop 10 dealloc" {
     var i: u32 = 0;
     var j: u32 = 100;
 
-    var st = stack.Stack(u32).init(&allocator);
+    var st = stack.Stack(u32).init(allocator);
     defer st.destroy();
 
     while (i < j) : (i += 1) {
@@ -112,7 +112,7 @@ test "accordion from hell" {
     var k: u32 = 0;
     const j: u32 = 100;
 
-    var st = stack.Stack(u32).init(&allocator);
+    var st = stack.Stack(u32).init(allocator);
     defer st.destroy();
 
     while (k < 100) : (k += 1) {

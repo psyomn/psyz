@@ -7,7 +7,7 @@ pub fn BinTree(comptime T: type) type {
         const Self = @This();
         root: ?*Node,
         cmpfn: fn (a: T, b: T) bool,
-        allocator: *const std.mem.Allocator,
+        allocator: std.mem.Allocator,
 
         pub const Node = struct {
             left: ?*Node,
@@ -16,7 +16,7 @@ pub fn BinTree(comptime T: type) type {
 
             const NodeSelf = @This();
 
-            pub fn mk(alloc: *const std.mem.Allocator, data: T) !*NodeSelf {
+            pub fn mk(alloc: std.mem.Allocator, data: T) !*NodeSelf {
                 var ret = try alloc.create(NodeSelf);
                 ret.left = null;
                 ret.right = null;
@@ -25,7 +25,7 @@ pub fn BinTree(comptime T: type) type {
             }
         };
 
-        pub fn init(allocator: *const std.mem.Allocator, cmpfn: fn (a: T, b: T) bool) Self {
+        pub fn init(allocator: std.mem.Allocator, cmpfn: fn (a: T, b: T) bool) Self {
             return .{
                 .root = null,
                 .allocator = allocator,
