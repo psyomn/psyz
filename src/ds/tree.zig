@@ -24,8 +24,6 @@ pub fn Tree(comptime T: type) type {
         }
 
         pub fn insert(self: *Self, item: T) !void {
-            _ = item;
-
             if (self.root) |_| {} else {
                 self.root = try self.allocator.create(Node);
                 self.cursor = self.root;

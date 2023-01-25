@@ -49,7 +49,6 @@ pub fn run() void {
 
         const itwo_01 = std.fmt.parseInt(i64, stwo.next().?, 10) catch unreachable;
         const itwo_02 = std.fmt.parseInt(i64, stwo.next().?, 10) catch unreachable;
-        _ = itwo_02;
 
         var p = Pairs{
             .one = [2]i64{ ione_01, ione_02 },

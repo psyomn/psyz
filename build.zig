@@ -18,13 +18,13 @@ fn mkC(
 
 const psyds = Pkg{
     .name = "psy-ds",
-    .path = .{ .path = "src/ds/ds.zig" },
+    .source = .{ .path = "src/ds/ds.zig" },
     .dependencies = null,
 };
 
 const misc = Pkg{
     .name = "psy-misc",
-    .path = .{ .path = "src/misc/misc.zig" },
+    .source = .{ .path = "src/misc/misc.zig" },
     .dependencies = null,
 };
 

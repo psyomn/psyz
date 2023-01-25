@@ -97,7 +97,7 @@ pub fn main() !void {
         }
     }
 
-    const fnarr = [_](fn () void){
+    const fnarr = [_](*const fn () void){
         aoc_01.run,
         aoc_02.run,
         aoc_03.run,

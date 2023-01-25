@@ -2,7 +2,7 @@ const std = @import("std");
 const common = @import("common.zig");
 
 pub fn run() void {
-    const allocator = std.testing.allocator;
+    const allocator = std.heap.page_allocator;
 
     common.mkline("AOC 3: 1");
 
