@@ -8,7 +8,7 @@ pub fn Tree(comptime T: type) type {
 
         pub const Node = struct {
             data: T,
-            children: ?[]Node,
+            children: ?[]Node = null,
         };
 
         root: ?*Node,

@@ -1,6 +1,6 @@
 # psyz
 
-Zig: 0.10.0
+Zig: 0.10.1
 
 A few experiments of mine to learn about the Zig programming language.
 
