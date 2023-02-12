@@ -75,6 +75,17 @@ pub fn build(b: *std.build.Builder) void {
         aoc.install();
     }
 
+    {
+        const exe = b.addExecutable("dsu", "src/desk/dsu.zig");
+        exe.setTarget(target);
+        exe.setBuildMode(mode);
+
+        exe.linkLibC();
+        exe.linkSystemLibrary("X11");
+
+        exe.install();
+    }
+
     _ = mkC("c_sqrt_example", "src/misc/cstuff/_sqrt.zig", b, &target, &mode);
     _ = mkC("c_str_example", "src/misc/cstuff/_str.zig", b, &target, &mode);
     _ = mkC("c_getopt_example", "src/misc/cstuff/_getopt_example.zig", b, &target, &mode);
