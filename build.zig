@@ -42,6 +42,12 @@ const misc = Pkg{
     .dependencies = null,
 };
 
+const utils = Pkg{
+    .name = "psy-utils",
+    .source = .{ .path = "src/utils/version.zig" },
+    .dependencies = null,
+};
+
 pub fn build(b: *std.build.Builder) void {
     // Standard target options allows the person running `zig build` to choose
     // what target to build for. Here we do not override the defaults, which
@@ -52,6 +58,40 @@ pub fn build(b: *std.build.Builder) void {
     // Standard release options allow the person running `zig build` to select
     // between Debug, ReleaseSafe, ReleaseFast, and ReleaseSmall.
     const mode = b.standardReleaseOptions();
+
+    blk: {
+        var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+        const allocator = gpa.allocator();
+        defer if (gpa.deinit()) std.log.warn("leaks detected in version tag generation", .{});
+
+        const cmdline = [_][]const u8{ "git", "describe", "--dirty", "--tags", "--abbrev=0" };
+        const result = std.ChildProcess.exec(.{
+            .allocator = allocator,
+            .argv = cmdline[0..],
+        }) catch |err| {
+            std.log.err("error running command: {any} -- version will not be updated", .{err});
+            break :blk;
+        };
+        defer {
+            allocator.free(result.stdout);
+            allocator.free(result.stderr);
+        }
+
+        const versionStr = std.mem.trim(u8, result.stdout[0..], "\n");
+        const versionPath = "src/utils/version.txt";
+        std.log.info("overwriting tagfile {s} with {s}", .{ versionPath, versionStr });
+
+        var fh = std.fs.cwd().openFile(versionPath, .{ .mode = .read_write }) catch |err| {
+            std.log.err("could not open version file {any}", .{err});
+            break :blk;
+        };
+        defer fh.close();
+
+        fh.writeAll(versionStr) catch |err| {
+            std.log.err("could not write git tag to version file: {any}", .{err});
+            break :blk;
+        };
+    }
 
     {
         const exe = b.addExecutable("psyz", "src/main.zig");
@@ -79,6 +119,8 @@ pub fn build(b: *std.build.Builder) void {
         const exe = b.addExecutable("dsu", "src/desk/dsu.zig");
         exe.setTarget(target);
         exe.setBuildMode(mode);
+
+        exe.addPackage(utils);
 
         exe.linkLibC();
         exe.linkSystemLibrary("X11");
