@@ -26,25 +26,19 @@ test "insert" {
     var tr = tree.Tree(u8).init(allocator);
     defer tr.destroy();
 
-    for ("hello") |c| {
-        try tr.insert(c);
-    }
+    for ("hello") |c| try tr.insert(c);
 }
 
 test "insert move cursor" {
     var tr = tree.Tree(u8).init(allocator);
     defer tr.destroy();
 
-    for ("hello") |c| {
-        try tr.insert(c);
-    }
+    for ("hello") |c| try tr.insert(c);
 
     var cursor = &tr.root.?.children.?[1];
     tr.cursor = cursor;
 
-    for ("hello") |c| {
-        try tr.insert(c);
-    }
+    for ("hello") |c| try tr.insert(c);
 
     const expectEqual = std.testing.expectEqual;
     const rootc = tr.root.?.children.?;

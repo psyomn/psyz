@@ -39,9 +39,12 @@ pub fn Tree(comptime T: type) type {
 
         pub fn insert(self: *Self, item: T) !void {
             if (self.root) |_| {} else {
-                self.root = try self.allocator.create(Node);
+                var node = try self.allocator.create(Node);
+                node.data = item;
+                node.children = null;
+
+                self.root = node;
                 self.cursor = self.root;
-                self.cursor.?.data = item;
                 return;
             }
 
