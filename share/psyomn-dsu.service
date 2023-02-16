@@ -1,0 +1,12 @@
+# put me in $HOME/.config/systemd/user/
+[Unit]
+Description=simple menubar updater for DWM
+
+[Service]
+Environment=DISPLAY=:0
+StandardError=journal
+ExecStart=/home/%u/.local/bin/dsu
+Restart=always
+
+[Install]
+WantedBy=default.target
