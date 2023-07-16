@@ -96,6 +96,18 @@ pub fn build(b: *std.build.Builder) void {
     }
 
     {
+        const exe = b.addExecutable(.{
+            .name = "base64",
+            .root_source_file = .{ .path = "src/base64.zig" },
+            .target = target,
+            .optimize = optimize,
+        });
+
+        exe.addModule("psy-utils", utils);
+        b.installArtifact(exe);
+    }
+
+    {
         const aoc = b.addExecutable(.{
             .name = "aoc-2022",
             .root_source_file = .{ .path = "src/aoc/2022/main.zig" },
