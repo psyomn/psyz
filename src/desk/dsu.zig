@@ -65,11 +65,11 @@ fn engraveDate(buf: []u8) usize {
     // sign (and reading the std lib it doesn't quite look like you can do this
     // if something is signed).
     const result = std.fmt.bufPrint(buf, "[{d:0>2}:{d:0>2}][{d:0>2}/{d:0>2}/{d:0>2}]", .{
-        @intCast(u32, tm.tm_hour),
-        @intCast(u32, tm.tm_min),
-        @intCast(u32, tm.tm_mday),
-        @intCast(u32, tm.tm_mon + 1),
-        @intCast(u32, tm.tm_year + 1900),
+        @as(u32, @intCast(tm.tm_hour)),
+        @as(u32, @intCast(tm.tm_min)),
+        @as(u32, @intCast(tm.tm_mday)),
+        @as(u32, @intCast(tm.tm_mon + 1)),
+        @as(u32, @intCast(tm.tm_year + 1900)),
     }) catch unreachable;
 
     return result.len;
