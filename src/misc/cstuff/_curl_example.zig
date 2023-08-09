@@ -39,7 +39,7 @@ pub fn main() !void {
     {
         var ret = getopt.getopt(std.os.argv, "u:");
         while (ret != -1) : (ret = getopt.getopt(std.os.argv, "u:")) {
-            switch (@intCast(u8, ret)) {
+            switch (ret) {
                 'u' => {
                     // TODO: need to free this
                     var optbuf = allocator.alloc(u8, getopt.optargLen()) catch |err| {

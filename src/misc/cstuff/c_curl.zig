@@ -54,9 +54,11 @@ pub fn get(url: []const u8) ![]u8 {
         .buf = try allocator.alloc(u8, 0),
     };
 
+    const url_ptr: [*c]const u8 = @ptrCast(url);
+
     code =
         C.curl_easy_setopt(client, C.CURLOPT_FOLLOWLOCATION, @as(u64, 1)) |
-        C.curl_easy_setopt(client, C.CURLOPT_URL, @ptrCast([*c]const u8, url)) |
+        C.curl_easy_setopt(client, C.CURLOPT_URL, url_ptr) |
         C.curl_easy_setopt(client, C.CURLOPT_WRITEFUNCTION, curlToBuffer) |
         C.curl_easy_setopt(client, C.CURLOPT_WRITEDATA, &dbuf) |
         C.curl_easy_perform(client);
