@@ -13,56 +13,46 @@
 // limitations under the License.
 
 const std = @import("std");
-const Pkg = std.build.Pkg;
+const Mod = std.build.Module;
 
 fn mkC(
     name: []const u8,
     path: []const u8,
     b: *std.build.Builder,
-    target: *const std.zig.CrossTarget,
-    mode: *const std.builtin.Mode,
+    target: std.zig.CrossTarget,
+    optimize: std.builtin.OptimizeMode,
 ) *std.build.LibExeObjStep {
-    const exe = b.addExecutable(name, path);
+    const exe = b.addExecutable(.{
+        .name = name,
+        .root_source_file = .{ .path = path },
+        .target = target,
+        .optimize = optimize,
+    });
     exe.linkLibC();
-    exe.setTarget(target.*);
-    exe.setBuildMode(mode.*);
-    exe.install();
+    b.installArtifact(exe);
     return exe;
 }
 
-const psyds = Pkg{
-    .name = "psy-ds",
-    .source = .{ .path = "src/ds/ds.zig" },
-    .dependencies = null,
-};
-
-const misc = Pkg{
-    .name = "psy-misc",
-    .source = .{ .path = "src/misc/misc.zig" },
-    .dependencies = null,
-};
-
-const utils = Pkg{
-    .name = "psy-utils",
-    .source = .{ .path = "src/utils/version.zig" },
-    .dependencies = null,
-};
-
 pub fn build(b: *std.build.Builder) void {
-    // Standard target options allows the person running `zig build` to choose
-    // what target to build for. Here we do not override the defaults, which
-    // means any target is allowed, and the default is native. Other options
-    // for restricting supported target set are available.
-    const target = b.standardTargetOptions(.{});
+    const psyds = b.createModule(.{
+        .source_file = .{ .path = "src/ds/ds.zig" },
+    });
 
-    // Standard release options allow the person running `zig build` to select
-    // between Debug, ReleaseSafe, ReleaseFast, and ReleaseSmall.
-    const mode = b.standardReleaseOptions();
+    const misc = b.createModule(.{
+        .source_file = .{ .path = "src/misc/misc.zig" },
+    });
+
+    const utils = b.createModule(.{
+        .source_file = .{ .path = "src/utils/version.zig" },
+    });
+
+    const target = b.standardTargetOptions(.{});
+    const optimize = b.standardOptimizeOption(.{});
 
     blk: {
         var gpa = std.heap.GeneralPurposeAllocator(.{}){};
         const allocator = gpa.allocator();
-        defer if (gpa.deinit()) std.log.warn("leaks detected in version tag generation", .{});
+        defer if (gpa.deinit() == .ok) std.log.warn("leaks detected in version tag generation", .{});
 
         const cmdline = [_][]const u8{ "git", "describe", "--dirty", "--tags", "--abbrev=0" };
         const result = std.ChildProcess.exec(.{
@@ -94,54 +84,65 @@ pub fn build(b: *std.build.Builder) void {
     }
 
     {
-        const exe = b.addExecutable("psyz", "src/main.zig");
+        const exe = b.addExecutable(.{
+            .name = "psyz",
+            .root_source_file = .{ .path = "src/main.zig" },
+            .target = target,
+            .optimize = optimize,
+        });
+
         exe.linkLibC(); // just to run with valgrind
-        exe.setTarget(target);
-        exe.setBuildMode(mode);
-        exe.install();
+        b.installArtifact(exe);
     }
 
     {
-        const aoc = b.addExecutable("aoc-2022", "src/aoc/2022/main.zig");
-        aoc.setTarget(target);
-        aoc.setBuildMode(mode);
-
-        aoc.addPackage(psyds);
-        aoc.addPackage(misc);
+        const aoc = b.addExecutable(.{
+            .name = "aoc-2022",
+            .root_source_file = .{ .path = "src/aoc/2022/main.zig" },
+            .target = target,
+            .optimize = optimize,
+        });
+        aoc.addModule("psy-ds", psyds);
+        aoc.addModule("psy-misc", misc);
 
         aoc.linkSystemLibraryName("curl");
         aoc.linkLibC();
 
-        aoc.install();
+        b.installArtifact(aoc);
     }
 
     {
-        const exe = b.addExecutable("dsu", "src/desk/dsu.zig");
-        exe.setTarget(target);
-        exe.setBuildMode(mode);
-
-        exe.addPackage(utils);
+        const exe = b.addExecutable(.{
+            .name = "dsu",
+            .root_source_file = .{ .path = "src/desk/dsu.zig" },
+            .target = target,
+            .optimize = optimize,
+        });
+        exe.addModule("psy-utils", utils);
 
         exe.linkLibC();
         exe.linkSystemLibrary("X11");
 
-        exe.install();
+        b.installArtifact(exe);
     }
 
-    _ = mkC("c_sqrt_example", "src/misc/cstuff/_sqrt.zig", b, &target, &mode);
-    _ = mkC("c_str_example", "src/misc/cstuff/_str.zig", b, &target, &mode);
-    _ = mkC("c_getopt_example", "src/misc/cstuff/_getopt_example.zig", b, &target, &mode);
+    _ = mkC("c_sqrt_example", "src/misc/cstuff/_sqrt.zig", b, target, optimize);
+    _ = mkC("c_str_example", "src/misc/cstuff/_str.zig", b, target, optimize);
+    _ = mkC("c_getopt_example", "src/misc/cstuff/_getopt_example.zig", b, target, optimize);
 
-    const c_curl = mkC("c_curl_example", "src/misc/cstuff/_curl_example.zig", b, &target, &mode);
+    const c_curl = mkC("c_curl_example", "src/misc/cstuff/_curl_example.zig", b, target, optimize);
     c_curl.linkSystemLibraryName("curl");
 
     {
+        const tests = b.addTest(.{
+            .root_source_file = .{ .path = "src/tests.zig" },
+            .target = target,
+            .optimize = optimize,
+        });
+
+        const run_unit_tests = b.addRunArtifact(tests);
+
         const test_step = b.step("test", "Run unit tests");
-        const tests = b.addTest("src/tests.zig");
-
-        tests.setTarget(target);
-        tests.setBuildMode(mode);
-
-        test_step.dependOn(&tests.step);
+        test_step.dependOn(&run_unit_tests.step);
     }
 }
