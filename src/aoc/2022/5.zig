@@ -35,7 +35,7 @@ fn part1() void {
         .stacks = .{ds.Stack(u8).init(allocator)} ** 9,
         .result = .{0} ** 9,
     };
-    for (state.stacks) |*stack| {
+    for (&state.stacks) |*stack| {
         defer stack.*.destroy();
     }
 
@@ -97,7 +97,7 @@ fn part1() void {
         std.log.info("{s}", .{stack.data});
     }
 
-    for (state.stacks) |stack, i| {
+    for (state.stacks, 0..) |stack, i| {
         state.result[i] = stack.peek();
     }
     std.log.info("result: {s}", .{state.result[0..]});
@@ -111,7 +111,7 @@ fn part2() void {
         .stacks = .{ds.Stack(u8).init(allocator)} ** 9,
         .result = .{0} ** 9,
     };
-    for (state.stacks) |*stack| {
+    for (&state.stacks) |*stack| {
         defer stack.*.destroy();
     }
 
@@ -181,7 +181,7 @@ fn part2() void {
         std.log.info("{s}", .{stack.data});
     }
 
-    for (state.stacks) |stack, i| {
+    for (state.stacks, 0..) |stack, i| {
         state.result[i] = stack.peek();
     }
     std.log.info("result: {s}", .{state.result[0..]});

@@ -49,7 +49,7 @@ pub fn run() void {
 
         var result: usize = 0;
 
-        for (buf) |c, i| {
+        for (buf, 0..) |c, i| {
             result = i;
             ring.insert(c) catch unreachable;
 

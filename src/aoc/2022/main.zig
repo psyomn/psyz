@@ -90,7 +90,7 @@ pub fn main() !void {
 
     var ret = getopt.getopt(os.argv, "p:hg");
     while (ret != -1) : (ret = getopt.getopt(os.argv, "p:hg")) {
-        switch (@intCast(u8, ret)) {
+        switch (ret) {
             'p' => {
                 const optarg = getopt.optargAsSlice();
                 sess.problem = try std.fmt.parseInt(u8, optarg, 10);

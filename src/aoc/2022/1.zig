@@ -59,7 +59,7 @@ fn run2() void {
             buf[3] = acc;
             acc = 0;
 
-            std.sort.sort(i64, buf[0..], {}, cmpfn);
+            std.mem.sort(i64, buf[0..], {}, cmpfn);
         }
     }
 
