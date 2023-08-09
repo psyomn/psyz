@@ -42,7 +42,7 @@ pub fn main() !void {
 
     var ret = getopt.getopt(os.argv, "vabcd:");
     while (ret != -1) : (ret = getopt.getopt(os.argv, "vabcd:")) {
-        switch (@intCast(u8, ret)) {
+        switch (ret) {
             'a' => sess.opt_a = true,
             'b' => sess.opt_b = true,
             'c' => sess.opt_c = true,

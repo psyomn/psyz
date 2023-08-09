@@ -29,19 +29,15 @@ pub const GetoptError = error{
 
 fn _getopt(argc: usize, argv: [*]const [*]u8, optstring: [*:0]const u8) i32 {
     // int getopt(int argc, char *const argv[], const char *optstring);
-    const c_argc: c_int = @intCast(c_int, argc);
+    const c_argc: c_int = @intCast(argc);
     const gret: c_int = C.getopt(c_argc, argv, optstring);
 
-    return @intCast(i32, gret);
+    return @intCast(gret);
 }
 
 pub fn getopt(argv: [][*:0]u8, optstring: [*:0]const u8) i32 {
-    const char_ret = _getopt(
-        argv.len,
-        @ptrCast([*]const [*]u8, argv),
-        optstring,
-    );
-
+    const c_argv: [*]const [*]u8 = @ptrCast(argv);
+    const char_ret = _getopt(argv.len, c_argv, optstring);
     return char_ret;
 }
 
