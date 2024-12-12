@@ -62,7 +62,7 @@ pub fn Tree(comptime T: type) type {
         }
 
         fn dealloc(self: *Self) !void {
-            var root = self.root orelse return;
+            const root = self.root orelse return;
 
             var stack = st.Stack([]Node).init(self.allocator);
             defer stack.destroy();

@@ -21,7 +21,7 @@ pub fn run() void {
     common.mkline("AOC 2: 1");
 
     const path = "src/aoc/2022/input/2.txt";
-    var buf = common.fileToBuf(path, allocator) catch |err| {
+    const buf = common.fileToBuf(path, allocator) catch |err| {
         std.debug.print("can't open file {s}: {}\n", .{ path, err });
         return;
     };

@@ -40,7 +40,7 @@ fn part1() void {
     }
 
     const filepath = "src/aoc/2022/input/5.txt";
-    var buf = common.fileToBuf(filepath, allocator) catch |err| {
+    const buf = common.fileToBuf(filepath, allocator) catch |err| {
         std.log.info("could not open file {s}: {}", .{ filepath, err });
         return;
     };
@@ -116,7 +116,7 @@ fn part2() void {
     }
 
     const filepath = "src/aoc/2022/input/5.txt";
-    var buf = common.fileToBuf(filepath, allocator) catch |err| {
+    const buf = common.fileToBuf(filepath, allocator) catch |err| {
         std.log.info("could not open file {s}: {}", .{ filepath, err });
         return;
     };

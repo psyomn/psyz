@@ -41,7 +41,7 @@ fn fetch() void {
         to: []const u8,
     };
 
-    var files = [_]etl{ .{
+    const files = [_]etl{ .{
         .from = "https://gist.githubusercontent.com/psyomn/e991f6925771670e697d6e0166745377/raw/92795cc0dedb18d6fba8ba4cb1f71ea5b9873a1f/aoc-2022-1.txt",
         .to = "src/aoc/2022/input/1.txt",
     }, .{

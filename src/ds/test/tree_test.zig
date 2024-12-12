@@ -35,7 +35,7 @@ test "insert move cursor" {
 
     for ("hello") |c| try tr.insert(c);
 
-    var cursor = &tr.root.?.children.?[1];
+    const cursor = &tr.root.?.children.?[1];
     tr.cursor = cursor;
 
     for ("hello") |c| try tr.insert(c);

@@ -21,7 +21,7 @@ pub fn run() void {
     common.mkline("AOC 3: 1");
 
     const path = "src/aoc/2022/input/3.txt";
-    var buf = common.fileToBuf(path, allocator) catch |err| {
+    const buf = common.fileToBuf(path, allocator) catch |err| {
         std.log.err("could not open file: {s}: {}", .{ path, err });
         return;
     };
@@ -67,9 +67,9 @@ pub fn run() void {
         var it = std.mem.split(u8, buf, "\n");
 
         while (true) {
-            var l1 = it.next();
-            var l2 = it.next();
-            var l3 = it.next();
+            const l1 = it.next();
+            const l2 = it.next();
+            const l3 = it.next();
 
             if (l1) |_| {} else {
                 break;

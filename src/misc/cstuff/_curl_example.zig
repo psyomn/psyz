@@ -46,7 +46,7 @@ pub fn main() !void {
                         std.log.err("{}", .{err});
                         @panic("coud not allocate optarg buf");
                     };
-                    std.mem.copy(u8, optbuf[0..], getopt.optargAsSlice()[0..]);
+                    @memcpy(optbuf[0..], getopt.optargAsSlice()[0..]);
                     sess.url = optbuf;
                 },
                 '?' => std.log.info("usage:  zurl [-u your url]", .{}),

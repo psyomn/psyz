@@ -1,4 +1,4 @@
-// Copyright 2022-2023 Simon Symeonidis / psyomn
+// Copyright 2022-2024 Simon Symeonidis / psyomn
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,4 +19,6 @@ test {
     _ = @import("ds/test/bintree_test.zig");
     _ = @import("ds/test/ring_test.zig");
     _ = @import("ds/test/tree_test.zig");
+
+    _ = @import("aoc/2024/common.zig");
 }

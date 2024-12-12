@@ -46,7 +46,7 @@ pub fn main() !void {
             'a' => sess.opt_a = true,
             'b' => sess.opt_b = true,
             'c' => sess.opt_c = true,
-            'd' => std.mem.copy(u8, sess.opt_d[0..], getopt.optargAsSlice()[0..]),
+            'd' => @memcpy(sess.opt_d[0..], getopt.optargAsSlice()[0..]),
             'v' => sess.version = true,
             '?' => {
                 std.log.info("bad parameters.  try --help", .{});

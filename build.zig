@@ -18,13 +18,13 @@ const Mod = std.build.Module;
 fn mkC(
     name: []const u8,
     path: []const u8,
-    b: *std.build.Builder,
-    target: std.zig.CrossTarget,
+    b: *std.Build,
+    target: std.Build.ResolvedTarget,
     optimize: std.builtin.OptimizeMode,
-) *std.build.LibExeObjStep {
+) *std.Build.Step.Compile {
     const exe = b.addExecutable(.{
         .name = name,
-        .root_source_file = .{ .path = path },
+        .root_source_file = b.path(path),
         .target = target,
         .optimize = optimize,
     });
@@ -33,17 +33,17 @@ fn mkC(
     return exe;
 }
 
-pub fn build(b: *std.build.Builder) void {
+pub fn build(b: *std.Build) void {
     const psyds = b.createModule(.{
-        .source_file = .{ .path = "src/ds/ds.zig" },
+        .root_source_file = b.path("src/ds/ds.zig"),
     });
 
     const misc = b.createModule(.{
-        .source_file = .{ .path = "src/misc/misc.zig" },
+        .root_source_file = b.path("src/misc/misc.zig"),
     });
 
     const utils = b.createModule(.{
-        .source_file = .{ .path = "src/utils/version.zig" },
+        .root_source_file = b.path("src/utils/version.zig"),
     });
 
     const target = b.standardTargetOptions(.{});
@@ -52,10 +52,10 @@ pub fn build(b: *std.build.Builder) void {
     blk: {
         var gpa = std.heap.GeneralPurposeAllocator(.{}){};
         const allocator = gpa.allocator();
-        defer if (gpa.deinit() == .ok) std.log.warn("leaks detected in version tag generation", .{});
+        defer if (gpa.deinit() == .leak) std.log.warn("leaks detected in version tag generation", .{});
 
         const cmdline = [_][]const u8{ "git", "describe", "--dirty", "--tags", "--abbrev=0" };
-        const result = std.ChildProcess.exec(.{
+        const result = std.process.Child.run(.{
             .allocator = allocator,
             .argv = cmdline[0..],
         }) catch |err| {
@@ -86,7 +86,7 @@ pub fn build(b: *std.build.Builder) void {
     {
         const exe = b.addExecutable(.{
             .name = "psyz",
-            .root_source_file = .{ .path = "src/main.zig" },
+            .root_source_file = b.path("src/main.zig"),
             .target = target,
             .optimize = optimize,
         });
@@ -98,27 +98,38 @@ pub fn build(b: *std.build.Builder) void {
     {
         const exe = b.addExecutable(.{
             .name = "base64",
-            .root_source_file = .{ .path = "src/base64.zig" },
+            .root_source_file = b.path("src/base64.zig"),
             .target = target,
             .optimize = optimize,
         });
 
-        exe.addModule("psy-utils", utils);
+        exe.root_module.addImport("psy-utils", utils);
         b.installArtifact(exe);
     }
 
     {
         const aoc = b.addExecutable(.{
             .name = "aoc-2022",
-            .root_source_file = .{ .path = "src/aoc/2022/main.zig" },
+            .root_source_file = b.path("src/aoc/2022/main.zig"),
             .target = target,
             .optimize = optimize,
         });
-        aoc.addModule("psy-ds", psyds);
-        aoc.addModule("psy-misc", misc);
+        aoc.root_module.addImport("psy-ds", psyds);
+        aoc.root_module.addImport("psy-misc", misc);
 
-        aoc.linkSystemLibraryName("curl");
+        aoc.linkSystemLibrary("curl");
         aoc.linkLibC();
+
+        b.installArtifact(aoc);
+    }
+
+    {
+        const aoc = b.addExecutable(.{
+            .name = "aoc-2024",
+            .root_source_file = b.path("src/aoc/2024/main.zig"),
+            .target = target,
+            .optimize = optimize,
+        });
 
         b.installArtifact(aoc);
     }
@@ -126,14 +137,25 @@ pub fn build(b: *std.build.Builder) void {
     {
         const exe = b.addExecutable(.{
             .name = "dsu",
-            .root_source_file = .{ .path = "src/desk/dsu.zig" },
+            .root_source_file = b.path("src/desk/dsu.zig"),
             .target = target,
             .optimize = optimize,
         });
-        exe.addModule("psy-utils", utils);
+        exe.root_module.addImport("psy-utils", utils);
 
         exe.linkLibC();
         exe.linkSystemLibrary("X11");
+
+        b.installArtifact(exe);
+    }
+
+    {
+        const exe = b.addExecutable(.{
+            .name = "http-example",
+            .root_source_file = b.path("src/http-example.zig"),
+            .target = target,
+            .optimize = optimize,
+        });
 
         b.installArtifact(exe);
     }
@@ -143,17 +165,16 @@ pub fn build(b: *std.build.Builder) void {
     _ = mkC("c_getopt_example", "src/misc/cstuff/_getopt_example.zig", b, target, optimize);
 
     const c_curl = mkC("c_curl_example", "src/misc/cstuff/_curl_example.zig", b, target, optimize);
-    c_curl.linkSystemLibraryName("curl");
+    c_curl.linkSystemLibrary("curl");
 
     {
         const tests = b.addTest(.{
-            .root_source_file = .{ .path = "src/tests.zig" },
+            .root_source_file = b.path("src/tests.zig"),
             .target = target,
             .optimize = optimize,
         });
 
         const run_unit_tests = b.addRunArtifact(tests);
-
         const test_step = b.step("test", "Run unit tests");
         test_step.dependOn(&run_unit_tests.step);
     }

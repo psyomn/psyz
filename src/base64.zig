@@ -74,7 +74,7 @@ const Session = struct {
             if (std.mem.eql(u8, arg, "-")) {
                 ret.of = stdout;
             } else {
-                var fh = try std.fs.cwd().createFile(arg, .{});
+                const fh = try std.fs.cwd().createFile(arg, .{});
                 ret.of = fh;
             }
             break;
@@ -101,7 +101,7 @@ fn encode(buf: []const u8, out: std.fs.File) !void {
         const n2 = if (ok2) buf[count + 2] else 0;
 
         const shl = std.math.shl;
-        var triad: u24 =
+        const triad: u24 =
             shl(u24, (n0), 16) |
             shl(u24, (n1), 8) |
             @as(u24, (n2));
@@ -129,7 +129,7 @@ fn decode(buf: []const u8, out: std.fs.File) !void {
         const n3: u24 = if (count + 3 < buf.len) buf[count + 3] else 0;
 
         const shl = std.math.shl;
-        var triad: u24 =
+        const triad: u24 =
             shl(u24, itable[n0], 18) |
             shl(u24, itable[n1], 12) |
             shl(u24, itable[n2], 6) |
@@ -167,7 +167,7 @@ pub fn main() !void {
         return;
     }
 
-    var data = try stdin.reader().readAllAlloc(allocator, 1024 * 1024 * 1024);
+    const data = try stdin.reader().readAllAlloc(allocator, 1024 * 1024 * 1024);
     defer allocator.free(data);
 
     if (sess.decode)

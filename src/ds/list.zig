@@ -52,7 +52,7 @@ pub fn List(comptime T: type) type {
         pub fn insertAfter(self: *Self, target: T, item: T) !void {
             var found = self.seek(target) orelse return error.ListNotFound;
 
-            var maybe_next: ?*Node = found.next;
+            const maybe_next: ?*Node = found.next;
 
             var new_node = try self.allocator.create(Node);
             new_node.data = item;

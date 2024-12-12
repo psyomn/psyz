@@ -34,7 +34,7 @@ pub fn DynArr(comptime T: type) type {
 
         pub fn add(self: *Self, item: T) !void {
             if (self.len == 0) {
-                var dat = try self.allocator.alloc(T, self.cap);
+                const dat = try self.allocator.alloc(T, self.cap);
                 self.len += 1;
                 self.data = dat;
                 self.data[self.len - 1] = item;

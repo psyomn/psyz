@@ -36,7 +36,7 @@ pub fn run() void {
     const allocator = std.heap.page_allocator;
 
     const path = "src/aoc/2022/input/6.txt";
-    var buf = common.fileToBuf(path, allocator) catch |err| {
+    const buf = common.fileToBuf(path, allocator) catch |err| {
         std.log.err("could not open file: {s}: {}", .{ path, err });
         return;
     };

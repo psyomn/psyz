@@ -18,7 +18,7 @@ const utils = @import("psy-utils");
 const allocator = std.heap.page_allocator;
 
 pub fn main() !void {
-    var sess = session{};
+    const sess = session{};
     std.log.info("started dsu {s}", .{utils.Version});
     std.log.info("tick interval: {d} seconds", .{sess.interval_seconds});
 
@@ -37,11 +37,11 @@ pub fn main() !void {
         var lastSz: usize = 0;
         for (engravers) |e| lastSz += e(buffer[lastSz..]);
 
-        var display: ?*CX11.Display = CX11.XOpenDisplay(0);
+        const display: ?*CX11.Display = CX11.XOpenDisplay(0);
 
         if (display) |d| {
-            var screen: c_int = CX11.DefaultScreen(d);
-            var root: CX11.Window = CX11.RootWindow(d, screen);
+            const screen: c_int = CX11.DefaultScreen(d);
+            const root: CX11.Window = CX11.RootWindow(d, screen);
 
             if (root != 0)
                 CX11.Xutf8SetWMProperties(d, root, buffer[0..], 0, 0, 0, 0, 0, 0)
@@ -59,7 +59,7 @@ pub fn main() !void {
 
 fn engraveDate(buf: []u8) usize {
     var now = CTime.time(null);
-    var tm: CTime.tm = CTime.localtime(&now).*;
+    const tm: CTime.tm = CTime.localtime(&now).*;
 
     // the casts are required because I can't figure out how to disable the
     // sign (and reading the std lib it doesn't quite look like you can do this
@@ -95,7 +95,7 @@ fn engraveBattery(buf: []u8) usize {
 fn engraveCalendar(buf: []u8) usize {
     // This was from the small storage project I did.  I'm not
     // sure if I want to do it again in zig but we can see!
-    std.mem.copy(u8, buf[0..], "[]");
+    @memcpy(buf[0..], "[]");
     return 2;
 }
 
@@ -107,7 +107,7 @@ fn engraveReminder(buf: []u8) usize {
         0xa9, ']',
     };
 
-    std.mem.copy(u8, buf[0..], to_copy[0..]);
+    @memcpy(buf[0..], to_copy[0..]);
 
     return to_copy.len;
 }
@@ -131,7 +131,7 @@ fn batteryProcFS() std.ArrayList(BatteryInfo) {
         };
         const trimmed = contents[0 .. rbytes - 1];
 
-        var capacity = std.fmt.parseUnsigned(u8, trimmed, 10) catch |err| {
+        const capacity = std.fmt.parseUnsigned(u8, trimmed, 10) catch |err| {
             std.log.warn("could not read capacity from {s}: {}", .{ trimmed, err });
             continue;
         };

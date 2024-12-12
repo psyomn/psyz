@@ -49,7 +49,7 @@ pub fn BinTree(comptime T: type) type {
 
         pub fn insert(self: *Self, item: T) !void {
             if (self.root) |_| {} else {
-                var node = try Node.mk(self.allocator, item);
+                const node = try Node.mk(self.allocator, item);
                 self.root = node;
                 return;
             }
@@ -61,7 +61,7 @@ pub fn BinTree(comptime T: type) type {
                     if (n.left) |_| {
                         it = n.left;
                     } else {
-                        var node = try Node.mk(self.allocator, item);
+                        const node = try Node.mk(self.allocator, item);
                         n.left = node;
                         break;
                     }
@@ -69,7 +69,7 @@ pub fn BinTree(comptime T: type) type {
                     if (n.right) |_| {
                         it = n.right;
                     } else {
-                        var node = try Node.mk(self.allocator, item);
+                        const node = try Node.mk(self.allocator, item);
                         n.right = node;
                         break;
                     }
@@ -78,7 +78,7 @@ pub fn BinTree(comptime T: type) type {
         }
 
         pub fn destroy(self: *Self) !void {
-            var root = self.root orelse return;
+            const root = self.root orelse return;
 
             var stack = st.Stack(*Node).init(self.allocator);
             defer stack.destroy();

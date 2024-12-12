@@ -52,8 +52,8 @@ pub fn run() void {
         // for the sake of brevity, I'm doing `catch unreachable' here.  don't
         // do that in more error critical software.
 
-        var one = lit.next().?;
-        var two = lit.next().?;
+        const one = lit.next().?;
+        const two = lit.next().?;
 
         var sone = std.mem.split(u8, one, "-");
         var stwo = std.mem.split(u8, two, "-");
@@ -64,7 +64,7 @@ pub fn run() void {
         const itwo_01 = std.fmt.parseInt(i64, stwo.next().?, 10) catch unreachable;
         const itwo_02 = std.fmt.parseInt(i64, stwo.next().?, 10) catch unreachable;
 
-        var p = Pairs{
+        const p = Pairs{
             .one = [2]i64{ ione_01, ione_02 },
             .two = [2]i64{ itwo_01, itwo_02 },
         };

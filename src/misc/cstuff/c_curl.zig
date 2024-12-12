@@ -30,7 +30,7 @@ const buffer = struct {
     buf: []u8,
 };
 
-fn curlToBuffer(data: [*]u8, size: usize, nmbel: usize, dbuf: *buffer) usize {
+fn curlToBuffer(data: [*]u8, size: usize, nmbel: usize, dbuf: *buffer) callconv(.C) usize {
     const realsize = size * nmbel;
     const prevLen = dbuf.len;
 
@@ -40,14 +40,14 @@ fn curlToBuffer(data: [*]u8, size: usize, nmbel: usize, dbuf: *buffer) usize {
         return 0;
     };
 
-    std.mem.copy(u8, dbuf.buf[prevLen..], data[0..realsize]);
+    @memcpy(dbuf.buf[prevLen..], data[0..realsize]);
 
     return realsize;
 }
 
 pub fn get(url: []const u8) ![]u8 {
     var code: C.CURLcode = undefined;
-    var client: ?*C.CURL = C.curl_easy_init();
+    const client: ?*C.CURL = C.curl_easy_init();
 
     var dbuf = buffer{
         .len = 0,

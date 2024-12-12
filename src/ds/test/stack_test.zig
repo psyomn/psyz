@@ -46,7 +46,7 @@ test "pop a few items" {
     defer st.destroy();
 
     var i: u8 = 0;
-    var n: u8 = 10;
+    const n: u8 = 10;
 
     while (i < n) : (i += 1) {
         try st.push(i);
@@ -67,7 +67,7 @@ test "insert stack structs" {
         age: u8,
     };
 
-    var ps = [_]Person{
+    const ps = [_]Person{
         .{ .name = "john", .age = 12 },
         .{ .name = "amy", .age = 13 },
         .{ .name = "dan", .age = 14 },
@@ -106,7 +106,7 @@ test "insert malloc'd structs" {
 
 test "push 10 pop 10 dealloc" {
     var i: u32 = 0;
-    var j: u32 = 100;
+    const j: u32 = 100;
 
     var st = stack.Stack(u32).init(allocator);
     defer st.destroy();
