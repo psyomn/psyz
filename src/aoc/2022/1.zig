@@ -40,7 +40,7 @@ fn run2() void {
     };
     defer allocator.free(file_contents);
 
-    var it = std.mem.split(u8, file_contents, "\n");
+    var it = std.mem.splitScalar(u8, file_contents, '\n');
     var buf: [4]i64 = .{0} ** 4;
 
     var max: i64 = 0;
@@ -81,7 +81,7 @@ fn run1() void {
     };
     defer allocator.free(file_contents);
 
-    var it = std.mem.split(u8, file_contents, "\n");
+    var it = std.mem.splitScalar(u8, file_contents, '\n');
 
     var max: i64 = 0;
     var acc: i64 = 0;

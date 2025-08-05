@@ -31,7 +31,7 @@ pub fn run() void {
         // part 1
         var priority: i64 = 0;
 
-        var it = std.mem.split(u8, buf, "\n");
+        var it = std.mem.splitScalar(u8, buf, '\n');
         while (it.next()) |line| {
             if (line.len == 0) continue;
 
@@ -64,7 +64,7 @@ pub fn run() void {
         // part 2
         var priority: i64 = 0;
 
-        var it = std.mem.split(u8, buf, "\n");
+        var it = std.mem.splitScalar(u8, buf, '\n');
 
         while (true) {
             const l1 = it.next();

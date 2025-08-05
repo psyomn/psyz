@@ -38,11 +38,11 @@ pub fn run() void {
     defer allocator.free(file_contents);
 
     // do the annoying parsing
-    var it = std.mem.split(u8, file_contents, "\n");
+    var it = std.mem.splitScalar(u8, file_contents, '\n');
     while (it.next()) |line| {
         if (line.len == 0) break;
 
-        var lit = std.mem.split(u8, line, ",");
+        var lit = std.mem.splitScalar(u8, line, ',');
 
         // 20-45,13-44
         // 7-8,8-28
@@ -55,8 +55,8 @@ pub fn run() void {
         const one = lit.next().?;
         const two = lit.next().?;
 
-        var sone = std.mem.split(u8, one, "-");
-        var stwo = std.mem.split(u8, two, "-");
+        var sone = std.mem.splitScalar(u8, one, '-');
+        var stwo = std.mem.splitScalar(u8, two, '-');
 
         const ione_01 = std.fmt.parseInt(i64, sone.next().?, 10) catch unreachable;
         const ione_02 = std.fmt.parseInt(i64, sone.next().?, 10) catch unreachable;

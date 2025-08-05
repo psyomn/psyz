@@ -44,7 +44,7 @@ pub fn run() void {
         .{ 'Y', 'Z', 'X' }, // S
     };
 
-    var it = std.mem.split(u8, buf, "\n");
+    var it = std.mem.splitScalar(u8, buf, '\n');
     while (it.next()) |tok| {
         if (tok.len != 3) continue;
 

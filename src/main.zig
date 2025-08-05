@@ -79,7 +79,7 @@ pub fn main() !void {
 
     var input: [4096]u8 = undefined;
     while (try r.readUntilDelimiterOrEof(&input, '\n')) |line| {
-        var iit = std.mem.split(u8, line, ",");
+        var iit = std.mem.splitScalar(u8, line, ',');
 
         var addr_from = std.net.Address.parseIp(iit.next().?, 0) catch |err| {
             std.log.err("could not parse ip: {}, {s}", .{ err, line });

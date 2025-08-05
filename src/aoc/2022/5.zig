@@ -47,7 +47,7 @@ fn part1() void {
     defer allocator.free(buf);
 
     // parse crates
-    var it = std.mem.split(u8, buf, "\n");
+    var it = std.mem.splitScalar(u8, buf, '\n');
     while (it.next()) |line| {
         if (line.len == 0) break;
 
@@ -78,7 +78,7 @@ fn part1() void {
     while (it.next()) |line| {
         if (line.len == 0) break;
 
-        var mit = std.mem.split(u8, line, " ");
+        var mit = std.mem.splitScalar(u8, line, ' ');
 
         _ = mit.next(); // move
         const num_move: i64 = std.fmt.parseInt(i64, mit.next().?, 10) catch unreachable;
@@ -123,7 +123,7 @@ fn part2() void {
     defer allocator.free(buf);
 
     // parse crates
-    var it = std.mem.split(u8, buf, "\n");
+    var it = std.mem.splitScalar(u8, buf, '\n');
     while (it.next()) |line| {
         if (line.len == 0) break;
 
@@ -154,7 +154,7 @@ fn part2() void {
     while (it.next()) |line| {
         if (line.len == 0) break;
 
-        var mit = std.mem.split(u8, line, " ");
+        var mit = std.mem.splitScalar(u8, line, ' ');
 
         _ = mit.next(); // move
         const num_move: i64 = std.fmt.parseInt(i64, mit.next().?, 10) catch unreachable;

@@ -34,7 +34,7 @@ pub fn run() void {
     };
     defer allocator.free(file_contents);
 
-    var line_it = std.mem.split(u8, file_contents, "\n");
+    var line_it = std.mem.splitScalar(u8, file_contents, '\n');
     while (line_it.next()) |line| {
         if (line.len == 0) break;
 

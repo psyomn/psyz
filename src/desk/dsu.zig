@@ -118,7 +118,7 @@ fn batteryProcFS() std.ArrayList(BatteryInfo) {
     var count: usize = 0;
 
     blk: while (true) : (count += 1) {
-        var bat_path: [std.fs.MAX_PATH_BYTES]u8 = undefined;
+        var bat_path: [std.fs.max_path_bytes]u8 = undefined;
         const res = std.fmt.bufPrint(bat_path[0..], "/sys/class/power_supply/BAT{d}/capacity", .{count}) catch unreachable;
 
         var fh = std.fs.openFileAbsolute(res, .{ .mode = .read_only }) catch break :blk;
