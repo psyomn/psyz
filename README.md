@@ -1,6 +1,6 @@
 # psyz
 
-Zig: `0.13.0`
+Zig: `0.14.1`
 
 A few experiments of mine to learn about the Zig programming language.
 
