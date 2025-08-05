@@ -20,5 +20,5 @@ test {
     _ = @import("ds/test/ring_test.zig");
     _ = @import("ds/test/tree_test.zig");
 
-    _ = @import("aoc/2024/common.zig");
+    _ = @import("aoc/2024/tests.zig");
 }

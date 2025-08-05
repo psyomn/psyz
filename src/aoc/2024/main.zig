@@ -4,14 +4,13 @@ pub fn main() !void {
     const probs = [_](*const fn () void){
         @import("1.zig").run,
         @import("2.zig").run,
+        @import("3.zig").run,
+        @import("4.zig").run,
+        @import("5.zig").run,
     };
 
-    if (std.os.argv.len == 1) {
-        for (probs, 0..) |p, ix| {
-            std.log.debug("==== {}", .{ix});
-            p();
-        }
-    } else if (std.os.argv.len > 1) {
-        // TODO
+    for (probs, 0..) |p, ix| {
+        std.log.debug("==== {}", .{ix + 1});
+        p();
     }
 }
